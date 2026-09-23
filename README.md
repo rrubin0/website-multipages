@@ -230,9 +230,9 @@ Publication is controlled by `site.json.site_type` (`one-page` | `multipage` | `
 | `/blog`, `/blog/{page}`, `/blog/{slug}` | SEO + `enable_blog` only |
 | `/sitemap.xml`, `/robots.txt`, `/llm.txt` | Generated; lists **indexable** published routes only |
 
-## Contact form (Netlify Forms)
+## Contact form (Netlify Forms + optional GoHighLevel)
 
-`ContactForm` uses markup-only Netlify Forms:
+`ContactForm` renders Netlify Forms markup by default:
 
 - `name="contact"`
 - `data-netlify="true"`
@@ -241,7 +241,16 @@ Publication is controlled by `site.json.site_type` (`one-page` | `multipage` | `
 
 No custom backend is required on Netlify.
 
-## Deploy (Netlify)
+**GoHighLevel (Infologic adaptation):** three options via the `provider` prop —
+`ghl-form` / `ghl-calendar` render the GHL embeds, `ghl-webhook` keeps this
+native form UI but posts to a GHL inbound webhook (Workflows > Inbound Webhook
+trigger) instead of Netlify. IDs and URLs live only in `src/lib/ghl.ts` — never
+inline them in components. Unconfigured (`YOUR_*` placeholder) values render a
+dev-only placeholder and nothing in production builds. Embedded forms are not
+mandatory: use the webhook path whenever the designed form UI is preferred over
+an iframe.
+
+## Deploy (Netlify or Cloudflare Pages)
 
 `netlify.toml` is configured for:
 
@@ -251,6 +260,14 @@ publish = "dist"
 ```
 
 Node 22 and pnpm frozen lockfile are set in build environment.
+
+**Cloudflare Pages (Infologic adaptation):** same build command (`pnpm install
+--frozen-lockfile && pnpm run build`), output directory `dist`, plus
+`NODE_VERSION=22.16.0` as a dashboard env var (Production + Preview — the v2
+build image defaults to Node 18 and ignores a bare `.nvmrc`). `robots.txt` is
+branch-aware: preview branches (`CF_PAGES_BRANCH` set and not `main`) are served
+`Disallow: /` so branch URLs never get indexed; production serves `Allow` plus
+the sitemap reference.
 
 ## pnpm enforcement
 

@@ -223,10 +223,15 @@ scripts/               # enforce-package-manager, validate-data
 
 `src/components/sections/ContactForm/ContactForm.astro`:
 
-- Netlify Forms markup only
+- Netlify Forms markup only (default: `provider="netlify"`)
 - `name="contact"` + `data-netlify="true"`
 - Inputs: `name`, `email`, `phone`, `service`, `message` (all named)
 - Action: `/thank-you`
+- GoHighLevel option (Infologic adaptation): `provider="ghl-form"` /
+  `provider="ghl-calendar"` renders the embeds configured in `src/lib/ghl.ts`;
+  `provider="ghl-webhook"` keeps the native form UI and posts to a GHL inbound
+  webhook URL instead (IDs/URLs never inline; unconfigured IDs show a dev-only
+  placeholder)
 
 ## Commands
 

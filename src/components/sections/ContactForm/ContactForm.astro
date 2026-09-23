@@ -7,6 +7,9 @@ import Input from '../../ui/Input.astro';
 import Textarea from '../../ui/Textarea.astro';
 import Button from '../../ui/Button.astro';
 import SectionHeader from '../../ui/SectionHeader.astro';
+import GHLFormEmbed from '../../ui/GHLFormEmbed.astro';
+import GHLCalendarEmbed from '../../ui/GHLCalendarEmbed.astro';
+import { GHL_CONFIG, isGhlConfigured } from '../../../lib/ghl';
 import { getBusiness, getServices } from '../../../data/loaders';
 
 interface Props {
@@ -16,6 +19,13 @@ interface Props {
   /** Compact mode hides the section header (e.g. contact page sidebar). */
   compact?: boolean;
   class?: string;
+  /**
+   * Lead-capture provider. `netlify` renders the built-in Netlify Forms markup;
+   * `ghl-form` / `ghl-calendar` render the GoHighLevel embeds configured in
+   * `src/lib/ghl.ts`; `ghl-webhook` keeps this native form UI but posts to the
+   * GHL inbound webhook URL instead of Netlify. Default: `netlify`.
+   */
+  provider?: 'netlify' | 'ghl-form' | 'ghl-calendar' | 'ghl-webhook';
 }
 
 const {
@@ -23,7 +33,12 @@ const {
   subtitle = 'Tell us about your project and we will respond within one business day.',
   compact = false,
   class: className = '',
+  provider = 'netlify',
 } = Astro.props;
+
+const webhookUrl = GHL_CONFIG.webhooks.contact;
+const webhookConfigured = isGhlConfigured(webhookUrl);
+const isWebhook = provider === 'ghl-webhook' && webhookConfigured;
 
 const business = getBusiness();
 const services = getServices().services;
@@ -57,23 +72,40 @@ const primaryPhone = business.phones[0] ?? '';
         )
       }
 
+      {provider === 'ghl-form' ? (
+        <GHLFormEmbed formId={GHL_CONFIG.forms.contact} />
+      ) : provider === 'ghl-calendar' ? (
+        <GHLCalendarEmbed calendarId={GHL_CONFIG.calendars.discovery} />
+      ) : provider === 'ghl-webhook' && !webhookConfigured ? (
+        import.meta.env.DEV ? (
+          <div class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-white px-8 py-10 text-center text-sm text-muted">
+            <p class="font-heading font-semibold text-dark">GHL Webhook Form</p>
+            <p class="text-xs">
+              Set a real webhook URL in <code class="rounded bg-border px-1 font-mono">src/lib/ghl.ts</code>{' '}
+              to enable native-form posting to GoHighLevel.
+            </p>
+          </div>
+        ) : null
+      ) : (
       <form
         name="contact"
         method="POST"
-        action="/thank-you"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
+        action={isWebhook ? webhookUrl : '/thank-you'}
+        data-netlify={isWebhook ? undefined : 'true'}
+        netlify-honeypot={isWebhook ? undefined : 'bot-field'}
         class="space-y-4"
       >
-        <input type="hidden" name="form-name" value="contact" />
+        {!isWebhook && <input type="hidden" name="form-name" value="contact" />}
 
-        <!-- Honeypot for spam; hidden from users -->
+        {/* Honeypot for spam (Netlify mode only); hidden from users */}
+        {!isWebhook && (
         <p class="hidden" aria-hidden="true">
           <label>
             Do not fill this out if you are human:
             <input name="bot-field" tabindex="-1" autocomplete="off" />
           </label>
         </p>
+        )}
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input
@@ -144,6 +176,7 @@ const primaryPhone = business.phones[0] ?? '';
           . {business.free_estimate}.
         </p>
       </form>
+      )}
     </div>
   </div>
 </section>

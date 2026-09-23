@@ -1,0 +1,42 @@
+---
+/**
+ * GHL form embed — renders the LeadConnector form iframe.
+ * Unconfigured (missing or YOUR_* placeholder ID) renders a visible placeholder
+ * in dev and nothing in production builds.
+ */
+import { isGhlConfigured } from '../../lib/ghl';
+
+interface Props {
+  formId?: string;
+  height?: string;
+}
+
+const { formId, height = '600px' } = Astro.props;
+
+const isDev = import.meta.env.DEV;
+const configured = isGhlConfigured(formId);
+---
+
+{
+  configured ? (
+    <div class="w-full" style={`min-height: ${height}`}>
+      <iframe
+        src={`https://api.leadconnectorhq.com/widget/form/${formId}`}
+        style={`width: 100%; height: ${height}; border: none; overflow: hidden;`}
+        title="Contact Form"
+        loading="lazy"
+      />
+    </div>
+  ) : isDev ? (
+    <div
+      class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-surface px-8 py-10 text-center text-sm text-muted"
+      style={`min-height: ${height}`}
+    >
+      <p class="font-heading font-semibold text-dark">GHL Form Embed</p>
+      <p class="text-xs">
+        Set a real form ID in <code class="rounded bg-border px-1 font-mono">src/lib/ghl.ts</code> to
+        render the live form.
+      </p>
+    </div>
+  ) : null
+}
