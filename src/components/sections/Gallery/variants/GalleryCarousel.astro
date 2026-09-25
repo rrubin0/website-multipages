@@ -36,7 +36,7 @@ const { data } = Astro.props;
                   videoId={item.video_provider !== 'ghl' ? item.video_url.trim() : undefined}
                   videoUrl={item.video_provider === 'ghl' ? item.video_url.trim() : undefined}
                   title={item.title}
-                  poster={item.video_poster?.trim() || item.image}
+                  poster={item.video_poster?.trim() || undefined}
                 />
               ) : (
                 <ResponsiveImage

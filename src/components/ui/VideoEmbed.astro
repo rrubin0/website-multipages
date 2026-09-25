@@ -14,7 +14,7 @@ interface Props {
   videoUrl?: string;
   /** Accessible title. Falls back to a generic label. */
   title?: string;
-  /** Poster image shown before play. YouTube falls back to the hqdefault thumbnail. */
+  /** Poster image shown before play. YouTube falls back to the hqdefault thumbnail. Must be an absolute, public, or remote URL — relative src/assets paths do not resolve in a plain img tag. */
   poster?: string;
   /** Extra classes for the outer wrapper. */
   class?: string;
