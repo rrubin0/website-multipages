@@ -47,7 +47,7 @@ const socialEntries = [
           primaryEmail && (
             <a
               href={`mailto:${primaryEmail}`}
-              class="hidden sm:inline-flex items-center gap-2 hover:text-accent transition-colors duration-300"
+              class="max-sm:hidden sm:inline-flex items-center gap-2 hover:text-accent transition-colors duration-300"
             >
               <Mail class="size-3.5 text-accent" aria-hidden="true" />
               <span class="font-medium">{primaryEmail}</span>
@@ -57,7 +57,7 @@ const socialEntries = [
 
         {
           primaryHours && (
-            <span class="hidden md:inline-flex items-center gap-2 text-white/80">
+            <span class="max-md:hidden md:inline-flex items-center gap-2 text-white/80">
               <Clock class="size-3.5 text-accent" aria-hidden="true" />
               <span>
                 {primaryHours.days}: {primaryHours.time}
