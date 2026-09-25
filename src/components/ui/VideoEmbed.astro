@@ -1,0 +1,101 @@
+---
+/**
+ * VideoEmbed — YouTube click-to-play facade or GHL direct-MP4 native video.
+ * Follows the GHL embed discipline: unconfigured renders a visible placeholder
+ * in dev and nothing in production builds.
+ */
+
+interface Props {
+  /** 'youtube' (videoId required) or 'ghl' (videoUrl required, direct .mp4). */
+  provider?: 'youtube' | 'ghl';
+  /** YouTube video ID (provider="youtube"). */
+  videoId?: string;
+  /** Direct .mp4 URL, e.g. GHL filesafe asset (provider="ghl"). */
+  videoUrl?: string;
+  /** Accessible title. Falls back to a generic label. */
+  title?: string;
+  /** Poster image shown before play. YouTube falls back to the hqdefault thumbnail. */
+  poster?: string;
+  /** Extra classes for the outer wrapper. */
+  class?: string;
+}
+
+const { provider, videoId, videoUrl, title = 'Video', poster, class: className } = Astro.props;
+
+const isDev = import.meta.env.DEV;
+const youtubeId = provider === 'youtube' ? (videoId ?? '').trim() : '';
+const ghlUrl = provider === 'ghl' ? (videoUrl ?? '').trim() : '';
+const configured = youtubeId !== '' || ghlUrl !== '';
+const thumb = poster?.trim() || (youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : '');
+---
+
+{
+  configured ? (
+    <div class:list={['video-embed relative overflow-hidden rounded-xl bg-dark', className]}>
+      {youtubeId ? (
+        <button
+          type="button"
+          class="video-embed__thumb group relative block aspect-video w-full cursor-pointer"
+          data-video-id={youtubeId}
+          aria-label={`Play video: ${title}`}
+        >
+          {thumb ? (
+            <img src={thumb} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
+          ) : (
+            <span class="absolute inset-0 bg-gradient-to-br from-dark via-primary to-dark" aria-hidden="true" />
+          )}
+          <span class="absolute inset-0 bg-dark/30 transition-colors group-hover:bg-dark/10" aria-hidden="true" />
+          <span
+            class="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-transform group-hover:scale-110"
+            aria-hidden="true"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </span>
+          <span class="sr-only">{title}</span>
+        </button>
+      ) : (
+        <video
+          class="block aspect-video w-full bg-dark"
+          controls
+          preload="metadata"
+          playsinline
+          {...(poster?.trim() ? { poster: poster.trim() } : {})}
+          aria-label={title}
+        >
+          <source src={ghlUrl} type="video/mp4" />
+        </video>
+      )}
+    </div>
+  ) : isDev ? (
+    <div class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-surface px-8 py-10 text-center text-sm text-muted">
+      <p class="font-heading font-semibold text-dark">Video Embed</p>
+      <p class="text-xs">
+        Set <code class="rounded bg-border px-1 font-mono">video_url</code> +{' '}
+        <code class="rounded bg-border px-1 font-mono">video_provider</code> on this item to
+        render the player.
+      </p>
+    </div>
+  ) : null
+}
+
+<style>
+  .video-embed__frame {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+</style>
+
+<script>
+  import { initVideoEmbeds } from '../../lib/video-embed';
+
+  function init() {
+    initVideoEmbeds();
+  }
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

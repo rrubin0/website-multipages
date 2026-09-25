@@ -183,6 +183,10 @@ export interface HeroSlide {
   text: string;
   cta_primary: CtaLink;
   cta_secondary?: CtaLink;
+  /** Optional video: YouTube ID (video_provider 'youtube') or direct .mp4 URL ('ghl'). */
+  video_url?: string;
+  video_provider?: 'youtube' | 'ghl';
+  video_poster?: string;
 }
 
 export interface HeroData {
@@ -225,6 +229,10 @@ export interface GalleryItem {
   category: string;
   location?: string;
   description?: string;
+  /** Optional video: YouTube ID (video_provider 'youtube') or direct .mp4 URL ('ghl'). Renders a player instead of the image. */
+  video_url?: string;
+  video_provider?: 'youtube' | 'ghl';
+  video_poster?: string;
 }
 
 export interface GalleryData {

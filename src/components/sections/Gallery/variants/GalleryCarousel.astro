@@ -9,6 +9,7 @@ import type { GalleryData } from '../../../../data/types';
 import SectionWrapper from '../../../ui/SectionWrapper.astro';
 import SectionHeader from '../../../ui/SectionHeader.astro';
 import ResponsiveImage from '../../../ui/ResponsiveImage.astro';
+import VideoEmbed from '../../../ui/VideoEmbed.astro';
 
 interface Props {
   data: GalleryData;
@@ -29,15 +30,25 @@ const { data } = Astro.props;
         data.items.map((item, i) => (
           <div class="swiper-slide">
             <figure class="relative aspect-[16/10] rounded-xl overflow-hidden">
-              <ResponsiveImage
-                src={item.image}
-                alt={item.image_alt}
-                width={1200}
-                height={750}
-                lcp={i === 0}
-                class="w-full h-full object-cover"
-                sizes="(max-width: 1024px) 100vw, 80vw"
-              />
+              {item.video_url?.trim() ? (
+                <VideoEmbed
+                  provider={item.video_provider ?? 'youtube'}
+                  videoId={item.video_provider !== 'ghl' ? item.video_url.trim() : undefined}
+                  videoUrl={item.video_provider === 'ghl' ? item.video_url.trim() : undefined}
+                  title={item.title}
+                  poster={item.video_poster?.trim() || item.image}
+                />
+              ) : (
+                <ResponsiveImage
+                  src={item.image}
+                  alt={item.image_alt}
+                  width={1200}
+                  height={750}
+                  lcp={i === 0}
+                  class="w-full h-full object-cover"
+                  sizes="(max-width: 1024px) 100vw, 80vw"
+                />
+              )}
               <figcaption class="absolute inset-x-0 bottom-0 p-4 md:p-6 bg-gradient-to-t from-dark/90 to-transparent text-white">
                 <p class="font-heading font-bold text-lg">{item.title}</p>
                 <p class="text-sm text-white/75">

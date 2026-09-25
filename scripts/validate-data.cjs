@@ -171,6 +171,9 @@ const schemas = {
           text: z.string().min(1),
           cta_primary: ctaLinkSchema,
           cta_secondary: ctaLinkSchema.optional(),
+          video_url: z.string().min(1).optional(),
+          video_provider: z.enum(['youtube', 'ghl']).optional(),
+          video_poster: z.string().optional(),
         }),
       )
       .min(1),
@@ -211,6 +214,9 @@ const schemas = {
           category: z.string().min(1),
           location: z.string().optional(),
           description: z.string().optional(),
+          video_url: z.string().min(1).optional(),
+          video_provider: z.enum(['youtube', 'ghl']).optional(),
+          video_poster: z.string().optional(),
         }),
       )
       .min(1),

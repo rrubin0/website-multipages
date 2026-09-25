@@ -6,6 +6,7 @@ import HeroSliderTwo from './HeroSliderTwo.astro';
 import HeroSliderThree from './HeroSliderThree.astro';
 import HeroSliderFour from './HeroSliderFour.astro';
 import HeroSliderFive from './HeroSliderFive.astro';
+import HeroSliderVideo from './HeroSliderVideo.astro';
 
 export const heroVariants = {
   one: HeroSliderOne,
@@ -13,6 +14,7 @@ export const heroVariants = {
   three: HeroSliderThree,
   four: HeroSliderFour,
   five: HeroSliderFive,
+  video: HeroSliderVideo,
 } as const;
 
 export type HeroVariantKey = keyof typeof heroVariants;
