@@ -2,11 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/ui/Button.astro';
 import CTABar from '../components/sections/CTABar.astro';
+import GHLCalendarEmbed from '../components/ui/GHLCalendarEmbed.astro';
+import { GHL_CONFIG, isGhlConfigured } from '../lib/ghl';
 import { getBusiness, getSite } from '../data/loaders';
 
 const business = getBusiness();
 const site = getSite();
 const primaryPhone = business.phones[0] ?? '';
+const bookingConfigured = isGhlConfigured(GHL_CONFIG.calendars.discovery);
 ---
 
 <BaseLayout
@@ -49,6 +52,29 @@ const primaryPhone = business.phones[0] ?? '';
       </div>
     </div>
   </section>
+
+  {
+    /* Booking widget: rendered only when a calendar ID is configured in
+       src/lib/ghl.ts. Clearing the ID removes the section (prod) — no code
+       edits needed to add or remove booking per client. */
+    bookingConfigured && (
+      <section class="bg-surface" aria-label="Book a call">
+        <div class="container-site py-14 md:py-20">
+          <div class="mx-auto max-w-3xl text-center">
+            <h2 class="font-heading mb-3 text-2xl font-bold text-dark md:text-3xl">
+              Book your call now
+            </h2>
+            <p class="mb-8 text-base text-muted">
+              Pick a time that suits you — no phone tag, no waiting.
+            </p>
+          </div>
+          <div class="mx-auto max-w-3xl">
+            <GHLCalendarEmbed calendarId={GHL_CONFIG.calendars.discovery} />
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <CTABar />
 </BaseLayout>
