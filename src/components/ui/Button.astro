@@ -2,7 +2,7 @@
 interface Props {
   href?: string;
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'inverse';
   size?: 'sm' | 'md' | 'lg';
   class?: string;
   disabled?: boolean;
@@ -30,6 +30,8 @@ const variants: Record<NonNullable<Props['variant']>, string> = {
   outline:
     'border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-white',
   ghost: 'text-primary bg-transparent hover:bg-primary/10',
+  inverse:
+    'bg-white text-accent hover:bg-light hover:text-accent hover:shadow-lg hover:shadow-dark/25 hover:-translate-y-0.5',
 };
 
 const sizes: Record<NonNullable<Props['size']>, string> = {
