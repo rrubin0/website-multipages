@@ -9,7 +9,10 @@ import { getBusiness, getSite } from '../data/loaders';
 const business = getBusiness();
 const site = getSite();
 const primaryPhone = business.phones[0] ?? '';
+const isDev = import.meta.env.DEV;
 const bookingConfigured = isGhlConfigured(GHL_CONFIG.calendars.discovery);
+// Section shows when configured (any env) or in dev (placeholder preview).
+const showBooking = bookingConfigured || isDev;
 ---
 
 <BaseLayout
@@ -54,10 +57,11 @@ const bookingConfigured = isGhlConfigured(GHL_CONFIG.calendars.discovery);
   </section>
 
   {
-    /* Booking widget: rendered only when a calendar ID is configured in
-       src/lib/ghl.ts. Clearing the ID removes the section (prod) — no code
-       edits needed to add or remove booking per client. */
-    bookingConfigured && (
+    /* Booking widget: live embed when a calendar ID is configured in
+       src/lib/ghl.ts, dev placeholder otherwise, nothing in production
+       builds when unconfigured. Clearing the ID removes the section (prod)
+       — no code edits needed to add or remove booking per client. */
+    showBooking && (
       <section class="bg-surface" aria-label="Book a call">
         <div class="container-site py-14 md:py-20">
           <div class="mx-auto max-w-3xl text-center">
