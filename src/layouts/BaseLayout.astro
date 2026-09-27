@@ -54,7 +54,7 @@ const {
   path = Astro.url.pathname,
   image,
   type,
-  noindex = false,
+  noindex: noindexProp = false,
   pageType = 'other',
   service,
   post,
@@ -64,6 +64,12 @@ const {
   hideTopBar = false,
   hideMobileStickyBar = false,
 } = Astro.props;
+
+const branch = import.meta.env.CF_PAGES_BRANCH as string | undefined;
+const isProductionBranch = !branch || branch === 'main';
+// Defense in depth with robots.txt.ts Disallow: preview-branch builds carry
+// noindex meta even if a crawler fetches before reading robots (010 decision).
+const noindex = noindexProp || !isProductionBranch;
 
 const seo = buildSeo({
   title,
