@@ -10,6 +10,7 @@ import SectionHeader from '../../../ui/SectionHeader.astro';
 import ResponsiveImage from '../../../ui/ResponsiveImage.astro';
 import Button from '../../../ui/Button.astro';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
+import { marked } from 'marked';
 
 interface Props {
   data: ServicesData;
@@ -47,9 +48,13 @@ const [featured, ...rest] = data.services;
           <h3 class="font-heading text-2xl md:text-3xl font-bold text-dark mb-4">
             {featured.name}
           </h3>
-          <p class="text-muted leading-relaxed mb-6">
-            {featured.full_description}
-          </p>
+          <div class="service-md text-muted leading-relaxed mb-6" set:html={marked.parse(featured.full_description)} />
+          <style>
+            .service-md h2 { font-size: 1.125rem; font-weight: 700; margin: 1rem 0 0.5rem; color: var(--color-dark); }
+            .service-md ul { list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0; display: grid; gap: 0.25rem; }
+            .service-md p { margin: 0.5rem 0; }
+            .service-md strong { color: var(--color-dark); }
+          </style>
           {showServiceDetail && (
             <Button href={`/services/${featured.slug}`} variant="primary" size="lg">
               Explore {featured.name}
