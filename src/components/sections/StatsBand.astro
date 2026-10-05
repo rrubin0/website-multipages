@@ -1,0 +1,48 @@
+---
+/**
+ * Bold recipe (Recipe #2) — proof stats band for the homepage.
+ * Auto-derives from business/testimonial data; any stat without data hides.
+ * Rendered by index.astro only when site.json features.enable_stats_band.
+ */
+import { getBusiness, getServices, getAreas, getTestimonials } from '../../data/loaders';
+import type { AreasData } from '../../data/types';
+
+const business = getBusiness();
+const services = getServices().services.length;
+const areas = (() => {
+  try {
+    const list = (getAreas() as AreasData).areas;
+    return Array.isArray(list) ? list.length : 0;
+  } catch {
+    return 0;
+  }
+})();
+const reviews = (() => {
+  try {
+    return getTestimonials().testimonials.length;
+  } catch {
+    return 0;
+  }
+})();
+const years = parseInt(String(business.years_experience).replace(/\D/g, ''), 10);
+
+const stats = [
+  Number.isFinite(years) && years > 0 ? { value: `${years}+`, label: 'years in the trade' } : null,
+  services > 0 ? { value: `${services}`, label: 'services offered' } : null,
+  areas > 0 ? { value: `${areas}`, label: 'cities served' } : null,
+  reviews > 0 ? { value: `${reviews}`, label: 'verified reviews' } : null,
+].filter((s): s is { value: string; label: string } => s !== null);
+---
+
+{stats.length > 0 && (
+  <section class="border-y border-border bg-surface" aria-label="Business proof stats">
+    <div class="container-site grid grid-cols-2 gap-6 py-8 md:grid-cols-4 md:py-10">
+      {stats.map((stat) => (
+        <div class="text-center">
+          <div class="font-heading text-3xl font-black text-dark md:text-4xl">{stat.value}</div>
+          <div class="text-sm text-muted">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

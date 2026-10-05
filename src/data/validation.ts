@@ -121,6 +121,7 @@ export const siteSchema = z.object({
     enable_faq: z.boolean(),
     enable_areas: z.boolean(),
     enable_directories: z.boolean(),
+    enable_stats_band: z.boolean().optional(),
   }),
   analytics: z
     .object({
@@ -130,6 +131,7 @@ export const siteSchema = z.object({
     .optional(),
   header_variant: z.string().optional(),
   footer_variant: z.string().optional(),
+  offer_strip: z.object({ text: z.string().min(1), href: z.string().optional() }).optional(),
 });
 
 const navLinkSchema = z.object({
@@ -200,6 +202,7 @@ export const servicesSchema = z.object({
         image: z.string().min(1),
         icon: z.string().optional(),
         highlights: z.array(z.string()).optional(),
+        price_hint: z.string().optional(),
         faq: z
           .array(
             z.object({

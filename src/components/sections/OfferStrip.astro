@@ -1,0 +1,37 @@
+---
+/**
+ * Bold recipe (Recipe #2) — offer strip above the header.
+ * Renders ONLY when site.json `offer_strip.text` is set (absent = no strip,
+ * template stays neutral). Reads business.json phone for the call link.
+ */
+import { getBusiness, getSite } from '../../data/loaders';
+import Phone from '@lucide/astro/icons/phone';
+
+const site = getSite();
+const business = getBusiness();
+const offerText = site.offer_strip?.text;
+const offerHref = site.offer_strip?.href;
+const primaryPhone = business.phones[0];
+const telHref = primaryPhone ? `tel:${primaryPhone.replace(/\D/g, '')}` : undefined;
+const href = offerHref ?? telHref;
+---
+
+{offerText && (
+  <div class="bg-dark text-white">
+    <div class="container-site flex items-center justify-center gap-3 py-2 text-center text-sm">
+      {href ? (
+        <a href={href} class="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4 hover:text-accent">
+          {offerText}
+        </a>
+      ) : (
+        <span class="font-semibold">{offerText}</span>
+      )}
+      {telHref && href !== telHref && (
+        <a href={telHref} class="inline-flex items-center gap-1 font-bold text-accent hover:text-white">
+          <Phone class="h-4 w-4" />
+          {primaryPhone}
+        </a>
+      )}
+    </div>
+  </div>
+)}

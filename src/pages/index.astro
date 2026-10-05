@@ -12,6 +12,7 @@ import MissionVision from '../components/sections/MissionVision.astro';
 import ContactForm from '../components/sections/ContactForm/ContactForm.astro';
 import FAQ from '../components/sections/FAQ/FAQ.astro';
 import CoveredAreas from '../components/sections/CoveredAreas/CoveredAreas.astro';
+import StatsBand from '../components/sections/StatsBand.astro';
 import { getSite } from '../data/loaders';
 
 const site = getSite();
@@ -26,6 +27,7 @@ const site = getSite();
 >
   <HeroSlider />
   <CTABar />
+  {site.features.enable_stats_band && <StatsBand />}
   <Welcome />
   <Services />
   {site.features.enable_testimonials && <Testimonials />}

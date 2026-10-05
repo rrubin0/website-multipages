@@ -54,6 +54,9 @@ const servicesPath = getServicesPath();
             <p class="text-white/70 text-sm leading-relaxed flex-1 mb-4">
               {service.short_description}
             </p>
+            {service.price_hint && (
+              <p class="mb-4 text-sm font-bold text-accent">{service.price_hint}</p>
+            )}
             {showServiceDetail && (
               <a
                 href={`/services/${service.slug}`}

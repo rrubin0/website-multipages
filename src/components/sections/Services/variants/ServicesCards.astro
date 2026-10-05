@@ -39,6 +39,9 @@ const showServiceDetail = publishesServiceDetail(site);
               <p class="text-muted text-sm leading-relaxed mb-4">
                 {service.short_description}
               </p>
+              {service.price_hint && (
+                <p class="mb-4 text-sm font-bold text-accent">{service.price_hint}</p>
+              )}
               {showServiceDetail && (
                 <a
                   href={`/services/${service.slug}`}

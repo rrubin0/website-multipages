@@ -111,6 +111,8 @@ export interface SiteFeatures {
   enable_faq: boolean;
   enable_areas: boolean;
   enable_directories: boolean;
+  /** Bold recipe (Recipe #2): proof stats band on the homepage. Absent = off. */
+  enable_stats_band?: boolean;
 }
 
 export interface SiteAnalytics {
@@ -139,6 +141,11 @@ export interface Site {
   header_variant?: string;
   /** Footer dispatcher variant: default | dark | compact | multi-column. */
   footer_variant?: string;
+  /** Bold recipe (Recipe #2): promo strip above the header. Absent = no strip. */
+  offer_strip?: {
+    text: string;
+    href?: string;
+  };
 }
 
 export interface NavLink {
@@ -210,6 +217,8 @@ export interface Service {
   image: string;
   icon?: string;
   highlights?: string[];
+  /** Bold recipe (Recipe #2): "From $X" line on service cards. Absent = hidden. */
+  price_hint?: string;
   faq?: ServiceFaq[];
 }
 
