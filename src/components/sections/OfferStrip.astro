@@ -17,17 +17,17 @@ const href = offerHref ?? telHref;
 ---
 
 {offerText && (
-  <div class="bg-dark text-white">
+  <div class="bg-accent text-white">
     <div class="container-site flex items-center justify-center gap-3 py-2 text-center text-sm">
       {href ? (
-        <a href={href} class="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4 hover:text-accent">
+        <a href={href} class="font-semibold text-white underline decoration-white/60 decoration-2 underline-offset-4 hover:decoration-white">
           {offerText}
         </a>
       ) : (
         <span class="font-semibold">{offerText}</span>
       )}
       {telHref && href !== telHref && (
-        <a href={telHref} class="inline-flex items-center gap-1 font-bold text-accent hover:text-white">
+        <a href={telHref} class="inline-flex items-center gap-1 font-bold text-white hover:underline">
           <Phone class="h-4 w-4" />
           {primaryPhone}
         </a>

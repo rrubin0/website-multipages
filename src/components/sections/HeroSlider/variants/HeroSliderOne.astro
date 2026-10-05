@@ -7,6 +7,11 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import type { HeroData } from '../../../../data/types';
+import { getSite } from '../../../../data/loaders';
+
+// Offer strip (Bold recipe) occupies the band the negative margin
+// would pull the hero into — skip the pull-up when it is present.
+const hasOfferStrip = Boolean(getSite().offer_strip?.text);
 import ResponsiveImage from '../../../ui/ResponsiveImage.astro';
 import Button from '../../../ui/Button.astro';
 
@@ -25,7 +30,7 @@ const overlayClass: Record<string, string> = {
 };
 ---
 
-<section class="relative -mt-[5.5rem] md:-mt-[6.5rem]" aria-label="Hero">
+<section class:list={["relative", !hasOfferStrip && "-mt-[5.5rem]", !hasOfferStrip && "md:-mt-[6.5rem]"]} aria-label="Hero">
   <div class="hero-swiper-one swiper h-screen min-h-[560px] md:min-h-[650px]">
     <div class="swiper-wrapper">
       {
